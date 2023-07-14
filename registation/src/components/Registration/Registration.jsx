@@ -14,10 +14,10 @@ const Registration = ({}) => {
     const [passWord, setPassword] = useState("")
     const [error, setError] = useState("")
 
-
     const handleProfileImage = (event) => {
         const file = event.target.files[0]
 
+        console.log(file)
         try {
             const url = URL.createObjectURL(file)
             setImageFile(file)
@@ -26,7 +26,6 @@ const Registration = ({}) => {
 
         }
     }
-
 
     const submitRegForm = () => {
 
@@ -43,16 +42,18 @@ const Registration = ({}) => {
             return;
         }
 
-        axios.post('http://68.183.214.2:8666/api/auth/signup', {
-            "username": userName,
-            "nickname": nickName,
-            "image_file": imageFile,
-            "password": passWord
-        }).then((response) => {
-            console.log(response)
-        }).catch((error) => {
-            console.log(error)
-        })
+        const formData = new FormData()
+        formData.append('username', userName)
+        formData.append('nickname', nickName)
+        formData.append('image_file', imageFile)
+        formData.append('password', passWord)
+
+        axios.post('http://68.183.214.2:8666/api/auth/signup/', formData)
+            .then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })
         setImageFile()
         setUsername("")
         setNickname("")
@@ -61,13 +62,12 @@ const Registration = ({}) => {
 
     useEffect(() => {
         fetch(defaultProfileImage)
-            .then(res => res.blob())
-            .then(blob => {
-                const file = new File([blob], 'defaultProfile.png', blob)
+            .then(res => res.arrayBuffer())
+            .then(buf => {
+                const file = new File([buf], 'defaultProfile.png', buf)
                 setImageFile(file)
             })
-    })
-
+    }, [])
 
     return (
         <div className="form">

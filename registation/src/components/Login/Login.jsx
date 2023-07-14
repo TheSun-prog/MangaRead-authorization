@@ -12,16 +12,17 @@ const Login = ({}) => {
         console.log(userName, typeof(userName))
         console.log(passWord, typeof(passWord))
 
+        const formData = new FormData()
 
-        axios.post('http://68.183.214.2:8666/api/auth/signin', {
-            "username": userName,
-            "password": passWord
-        })
-            .then((response) => {
-            console.log(response)
-        }).catch((error) => {
-            console.log(error)
-        })
+        formData.append("username", userName)
+        formData.append("password", passWord)
+
+        axios.post('http://68.183.214.2:8666/api/auth/signin/', formData)
+                .then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })
         setUsername("")
         setPassword("")
     }
